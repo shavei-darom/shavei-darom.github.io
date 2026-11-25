@@ -186,6 +186,7 @@ function filtered(all){
 }
 function short(n){return n.length<=10?n:n.slice(0,9)+'..'}
 
+const AREA={"692":510,"693":510,"694":510,"695":510,"696":510,"697":510,"698":510,"699":510,"700":510,"701":510,"702":509,"703":516,"704":512,"705":519,"706":519,"707":515,"708":514,"709":507,"710":512,"711":515,"712":510,"713":510,"714":510,"715":510,"716":510,"717":510,"718":510,"719":510,"720":516,"721":518,"722":516,"723":517,"724":518,"725":514,"726":519,"727":513,"728":514,"729":506,"730":517,"731":520,"732":510,"733":510,"734":510,"735":510,"736":510,"737":510,"738":510,"739":510,"740":510,"741":510,"742":519,"743":517,"744":512,"745":517,"746":512,"747":510,"748":510,"749":510,"750":512,"751":513,"752":523,"753":517,"754":510,"755":517,"756":515,"757":519,"758":519,"759":520,"760":517,"761":520,"762":525,"763":516,"764":515,"765":525,"766":522,"767":509,"768":513,"769":508,"770":509,"771":510,"772":510,"773":510,"774":510,"775":510,"776":510,"777":510,"778":510,"779":510,"780":507};
 function renderMap(all,hit){
   const svg=$('svg');svg.textContent='';
   svg.appendChild(el('rect',{x:0,y:0,width:1240,height:715,rx:20,fill:'#f8fafc'}));
@@ -215,7 +216,7 @@ function renderMap(all,hit){
     if(p.occ){
       g.appendChild(el('text',{x:cx,y:p.y+39,'text-anchor':'middle',fill:'#fff','font-size':p.name.length>8?9.2:10.8,'font-weight':700},short(p.name)));
       if(p.phone||p.note)g.appendChild(el('circle',{cx:cx,cy:p.y+54,r:3,fill:'#fbbf24'}));
-    }else g.appendChild(el('text',{x:cx,y:p.y+43,'text-anchor':'middle',fill:'#10b981','font-size':10,'font-weight':600},'פנוי'));
+    }else{g.appendChild(el('text',{x:cx,y:p.y+43,'text-anchor':'middle',fill:'#10b981','font-size':10,'font-weight':600},'פנוי'));if(S.admin&&AREA[p.id])g.appendChild(el('text',{x:cx,y:p.y+57,'text-anchor':'middle',fill:'#0f766e','font-size':9.5,'font-weight':700},AREA[p.id]+' מ״ר'))}
     svg.appendChild(g);
   });
 }
@@ -229,7 +230,7 @@ function renderList(items){
     const s1=document.createElement('small');s1.textContent='מגרש';const s2=document.createElement('span');s2.textContent=p.id;b.append(s1,s2);
     const m=document.createElement('div');
     const h=document.createElement('h3');h.textContent=p.occ?'משפחת '+p.name:'מגרש פנוי';
-    const z=document.createElement('p');z.textContent=p.zone+(p.note?' • '+p.note:'')+(p.phone?' • '+p.phone:'')+(S.admin&&p.updatedAt?' • עודכן '+fmtT(p.updatedAt):'');
+    const z=document.createElement('p');z.textContent=p.zone+(p.note?' • '+p.note:'')+(p.phone?' • '+p.phone:'')+(S.admin&&!p.occ&&AREA[p.id]?' • '+AREA[p.id]+' מ״ר':'')+(S.admin&&p.updatedAt?' • עודכן '+fmtT(p.updatedAt):'');
     m.append(h,z);
     const a=document.createElement('span');a.className='act';a.textContent=p.occ?'פרטים':'שבץ';
     d.append(b,m,a);host.appendChild(d);
